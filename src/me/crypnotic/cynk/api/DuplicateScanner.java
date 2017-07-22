@@ -2,8 +2,6 @@ package me.crypnotic.cynk.api;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class DuplicateScanner implements Runnable {
 
 	private final File directory;
 	private final List<String> hashes;
-	private final Comparator<File> sort;
+	private final Comparator<File> sorter;
 	private int deleted;
 
 	public DuplicateScanner(File directory) {
@@ -21,7 +19,7 @@ public class DuplicateScanner implements Runnable {
 		this.hashes = new ArrayList<String>();
 		this.deleted = 0;
 
-		this.sort = (alpha, beta) -> {
+		this.sorter = (alpha, beta) -> {
 			if (alpha.isDirectory() && beta.isFile()) {
 				return 1;
 			} else if (alpha.isFile() && beta.isDirectory()) {
@@ -43,11 +41,7 @@ public class DuplicateScanner implements Runnable {
 	private List<File> getDuplicates(File directory) {
 		List<File> duplicates = new ArrayList<File>();
 
-		List<File> list = Arrays.asList(directory.listFiles());
-
-		Collections.sort(list, sort);
-
-		for (File file : list) {
+		for (File file : Files.sort(directory.listFiles(), sorter)) {
 			if (file.isDirectory()) {
 				List<File> child = getDuplicates(file);
 

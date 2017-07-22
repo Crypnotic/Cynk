@@ -3,6 +3,10 @@ package me.crypnotic.cynk.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Files {
 
@@ -31,5 +35,13 @@ public class Files {
 			exception.printStackTrace();
 		}
 		return null;
+	}
+
+	public static List<File> sort(File[] files, Comparator<File> comparator) {
+		List<File> list = Arrays.asList(files);
+
+		Collections.sort(list, comparator);
+
+		return list;
 	}
 }
