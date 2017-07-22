@@ -37,11 +37,7 @@ public class DuplicateScanner implements Runnable {
 			hashes.clear();
 		}
 
-		List<File> duplicates = getDuplicates(directory);
-
-		duplicates.forEach(this::delete);
-
-		this.deleted = duplicates.size();
+		this.deleted = getDuplicates(directory).stream().mapToInt(this::delete).sum();
 	}
 
 	private List<File> getDuplicates(File directory) {
