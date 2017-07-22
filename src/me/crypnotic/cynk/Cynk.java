@@ -2,6 +2,8 @@ package me.crypnotic.cynk;
 
 import java.io.File;
 
+import me.crypnotic.cynk.api.DuplicateScanner;
+
 public class Cynk {
 
 	public static void main(String[] arguments) {
