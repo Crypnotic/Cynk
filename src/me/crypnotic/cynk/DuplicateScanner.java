@@ -20,7 +20,7 @@ public class DuplicateScanner implements Runnable {
 		this.directory = directory;
 		this.hashes = new ArrayList<String>();
 		this.deleted = 0;
-		
+
 		this.sort = (alpha, beta) -> {
 			if (alpha.isDirectory() && beta.isFile()) {
 				return 1;
@@ -33,7 +33,9 @@ public class DuplicateScanner implements Runnable {
 	}
 
 	public void run() {
-		reset();
+		if (hashes.size() > 0) {
+			hashes.clear();
+		}
 
 		List<File> duplicates = getDuplicates(directory);
 
@@ -51,12 +53,12 @@ public class DuplicateScanner implements Runnable {
 
 		for (File file : list) {
 			if (file.isDirectory()) {
-				List<File> dirDuplicates = getDuplicates(file);
+				List<File> child = getDuplicates(file);
 
-				if (dirDuplicates.size() == file.listFiles().length) {
+				if (child.size() == file.listFiles().length) {
 					duplicates.add(file);
 				} else {
-					duplicates.addAll(dirDuplicates);
+					duplicates.addAll(child);
 				}
 			} else {
 				String checksum = checksum(file);
@@ -113,13 +115,6 @@ public class DuplicateScanner implements Runnable {
 		file.delete();
 
 		return (deleted += 1);
-	}
-
-	public void reset() {
-		if (hashes.size() > 0) {
-			hashes.clear();
-		}
-		this.deleted = 0;
 	}
 
 	public int getDeleted() {
